@@ -56,3 +56,18 @@ input {
 butn:hover {
     background-color:#E493B3;
 }
+
+.fa-check-square-o.completed {
+    color: green; /* You can choose any color */
+}
+
+.todo-text.completed {
+    text-decoration: none; /* Remove line-through */
+    color: gray; /* Optional: Change color of completed text */
+}
+.green {
+    color: green;
+}
+.fa .fa-thumbs-up{
+    color: #FC4F4F ;
+}

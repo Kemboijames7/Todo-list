@@ -5,6 +5,7 @@ const PORT = 3000;
 require('dotenv').config();
 
 
+let uri = process.env.DATABASE_URL
 
 let db; // Define db globally
 
@@ -50,7 +51,7 @@ app.get('/', async (request, response) => {
 });
 
 app.post('/addTodo', (request, response) => {
-    db.collection('todos').insertOne({ thing: request.body.todoItem, completed: false })
+    db.collection('todos').insertOne({ thing: request.body.todoItem, completed: false, likes: 0})
         .then(result => {
             console.log('Todo Added');
             response.redirect('/');
@@ -61,43 +62,68 @@ app.post('/addTodo', (request, response) => {
         });
 });
 
-app.put('/markComplete', (request, response) => {
-    db.collection('todos').updateOne({ thing: request.body.itemFromJS }, {
-        $set: {
-            completed: true
-        }
-    }, {
-        sort: { _id: -1 },
-        upsert: false
+
+app.put('/likedItem', (request, response) => {
+    db.collection('todos').updateOne(
+        { thing: request.body.itemFromJS },
+        { $set: { likes: request.body.likesS + 1 } },
+        { upsert: false }
+    )
+    .then(result => {
+        console.log('Like Added');
+        response.json('Like added');
     })
-        .then(result => {
-            console.log('Marked Complete');
-            response.json('Marked Complete');
-        })
-        .catch(error => {
-            console.error(error);
-            response.status(500).send('Error marking complete');
-        });
+    .catch(error => {
+        console.error(error);
+        response.status(500).send('Error liking todo');
+    });
 });
 
-app.put('/markUnComplete', (request, response) => {
-    db.collection('todos').updateOne({ thing: request.body.itemFromJS }, {
-        $set: {
-            completed: false
+
+
+
+
+app.put('/markComplete', (request, response) => {
+    db.collection('todos').updateOne(
+        { thing: request.body.itemFromJS },
+        {
+            $set: {
+                completed: true  // Mark the item as completed
+            }
+        },
+        {
+            sort: { _id: -1 },
+            upsert: false
         }
-    }, {
-        sort: { _id: -1 },
-        upsert: false
+    )
+    .then(result => {
+        console.log('Marked Complete');
+        response.json('Marked Complete');
     })
-        .then(result => {
-            console.log('Marked Uncomplete');
-            response.json('Marked Uncomplete');
-        })
-        .catch(error => {
-            console.error(error);
-            response.status(500).send('Error marking uncomplete');
-        });
+    .catch(error => {
+        console.error(error);
+        response.status(500).send('Error marking complete');
+    });
 });
+
+// app.put('/markUnComplete', (request, response) => {
+//     db.collection('todos').updateOne({ thing: request.body.itemFromJS }, {
+//         $set: {
+//             completed: false
+//         }
+//     }, {
+//         sort: { _id: -1 },
+//         upsert: false
+//     })
+//         .then(result => {
+//             console.log('Marked Uncomplete');
+//             response.json('Marked Uncomplete');
+//         })
+//         .catch(error => {
+//             console.error(error);
+//             response.status(500).send('Error marking uncomplete');
+//         });
+// });
 
 app.delete('/deleteItem', (request, response) => {
     db.collection('todos').deleteOne({ thing: request.body.itemFromJS })
