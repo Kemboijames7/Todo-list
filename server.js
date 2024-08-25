@@ -3,7 +3,7 @@ const app = express();
 const MongoClient = require('mongodb').MongoClient;
 const PORT = 3000;
 require('dotenv').config();
-
+const { ObjectId } = require('mongodb');
 
 let uri = process.env.DATABASE_URL
 
@@ -32,9 +32,9 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get('/test', (req, res) => {
-    res.send('This is a test route!');
-});
+// app.get('/test', (req, res) => {
+//     res.send('This is a test route!');
+// });
 
 
 app.get('/', async (request, response) => {
@@ -83,28 +83,57 @@ app.put('/likedItem', (request, response) => {
 
 
 
-app.put('/markComplete', (request, response) => {
-    db.collection('todos').updateOne(
-        { thing: request.body.itemFromJS },
-        {
-            $set: {
-                completed: true  // Mark the item as completed
+// app.put('/markComplete', (request, response) => {
+//     db.collection('todos').updateOne(
+//         { thing: request.body.itemFromJS },
+//         {
+//             $set: {
+//                 completed: true  // Mark the item as completed
+//             }
+//         },
+//         {
+//             sort: { _id: -1 },
+//             upsert: false
+//         }
+//     )
+//     .then(result => {
+//         console.log('Marked Complete');
+//         response.json('Marked Complete');
+//     })
+//     .catch(error => {
+//         console.error(error);
+//         response.status(500).send('Error marking complete');
+//     });
+// });
+
+
+aapp.put('/updateTodo', (req, res) => {
+    const itemId = req.body.id;
+    const newTodoText = req.body.newText;
+
+    if (!ObjectId.isValid(itemId)) {
+        return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    db.collection('todos')
+        .findOneAndUpdate(
+            { _id: ObjectId(itemId) },
+            { $set: { thing: newTodoText } },
+            { returnOriginal: false } // returns the updated document
+        )
+        .then(result => {
+            if (!result.value) {
+                res.status(404).json({ error: 'Todo not found' });
+            } else {
+                res.json('Success');
             }
-        },
-        {
-            sort: { _id: -1 },
-            upsert: false
-        }
-    )
-    .then(result => {
-        console.log('Marked Complete');
-        response.json('Marked Complete');
-    })
-    .catch(error => {
-        console.error(error);
-        response.status(500).send('Error marking complete');
-    });
+        })
+        .catch(error => {
+            console.error('Error updating todo:', error);
+            res.status(500).send('Error updating todo');
+        });
 });
+
 
 // app.put('/markUnComplete', (request, response) => {
 //     db.collection('todos').updateOne({ thing: request.body.itemFromJS }, {

@@ -68,6 +68,7 @@ butn:hover {
 .green {
     color: green;
 }
-.fa .fa-thumbs-up{
-    color: #FC4F4F ;
+.fa-edit {
+    cursor: pointer;
+    margin-left: 10px;
 }

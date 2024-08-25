@@ -1,17 +1,24 @@
 const deleteBtn = document.querySelectorAll('.fa-trash');
-const item = document.querySelectorAll('.item .fa-check-square-o', '.item .fa-square-o');
+const item = document.querySelectorAll('.item .fa-check-square-o');
 const loveLiked = document.querySelectorAll('.fa-thumbs-up');
+const editButtons = document.querySelectorAll('.fa-edit');
+
+
 
 Array.from(deleteBtn).forEach((element) => {
     element.addEventListener('click', deleteItem);
 });
 
-Array.from(item).forEach((element) => {
-    element.addEventListener('click', markComplete);
-});
+// Array.from(item).forEach((element) => {
+//     element.addEventListener('click', markComplete);
+// });
 
 Array.from(loveLiked).forEach((element) => {
     element.addEventListener('click', addLike);
+});
+
+Array.from(editButtons).forEach((element) => {
+    element.addEventListener('click', editItem);
 });
 
 async function deleteItem(event) {
@@ -25,7 +32,11 @@ async function deleteItem(event) {
         });
         const data = await response.json();
         console.log(data);
-        location.reload();
+        if (data === 'Todo Deleted') {
+            // Remove the todo item from the DOM
+            this.parentNode.remove();
+        }
+
     } catch (err) {
         console.log(err);
     }
@@ -49,30 +60,44 @@ async function addLike(event) {
     }
 }
 
-async function markComplete(event) {
-    event.stopPropagation();
-    const itemId = this.dataset.id;
-    const isCompleted = this.classList.contains('fa-check-square-o');
-    const itemText = this.parentNode.querySelector('.todo-text').innerText;
-    try {
-        const response = await fetch('markComplete', {
-            method: 'put',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 'itemFromJS': itemText })
-        });
-        const data = await response.json();
-        console.log(data);
-        location.reload();
+// async function markComplete(event) {
+//     event.stopPropagation();
+//     const itemText = this.parentNode.querySelector('.todo-text').innerText;
+//     try {
+//         const response = await fetch('markComplete', {
+//             method: 'put',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify({ 'itemFromJS': itemText })
+//         });
+//         const data = await response.json();
+//         console.log(data);
+//         location.reload();
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }
+ 
 
-        if (!isCompleted) {
-            this.classList.remove('fa-square-o');
-            this.classList.add('fa-check-square-o', 'green');
-        } else {
-            this.classList.remove('fa-check-square-o', 'green');
-            this.classList.add('fa-square-o');
+
+async function editItem(event) {
+    const itemId = this.getAttribute('data-id');
+    const newTodoText = prompt('Edit your todo item:');
+    
+    if (newTodoText) {
+        try {
+            const response = await fetch('/updateTodo', {
+                method: 'put',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    'id': itemId,
+                    'newText': newTodoText
+                })
+            });
+            const data = await response.json();
+            console.log(data);
+            location.reload();
+        } catch (err) {
+            console.log(err);
         }
-
-    } catch (err) {
-        console.log(err);
     }
 }
