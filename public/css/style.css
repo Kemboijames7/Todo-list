@@ -1,5 +1,6 @@
 body {
     background-color:#FFBC80 ;
+    
 }
 
 span {
@@ -10,20 +11,20 @@ span {
 h1{
     color: rgb(10, 9, 9);
 }
-.completed{
+/* .completed{
     color: gray;
     text-decoration: line-through;
-}
+} */
 
 *{
     box-sizing: border-box;
 }
 
-.fa .fa-trash {
+/* .fa .fa-trash {
     align-items: center;
   justify-content: center;
 
-}
+} */
 
 
 h2{
@@ -34,6 +35,12 @@ form{
     padding: 10px, 5px;
     border-radius:10px
 }
+@keyframes slideDown {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
 input {
     margin-bottom: 10px;
@@ -43,32 +50,48 @@ input {
 }
 
 .butn {
-    display: flex;
+    
     padding: 10px;
     background-color: #64748b;
-    color: #B784B7;
+    color: #e122e1;
     border: none;
     justify-content: center;
     border-radius: 4px;
     cursor: pointer;
 }
 
+
+butn:hover {
+    background-color:#E493B3;
+}
+
+/* 
 butn:hover {
     background-color:#E493B3;
 }
 
 .fa-check-square-o.completed {
-    color: green; /* You can choose any color */
+    color: green;  
 }
 
 .todo-text.completed {
-    text-decoration: none; /* Remove line-through */
-    color: gray; /* Optional: Change color of completed text */
+    text-decoration: none;  
+    color: gray;  
 }
 .green {
     color: green;
 }
-.fa-edit {
+.fa .fa-edit {
     cursor: pointer;
     margin-left: 10px;
 }
+
+.item span {
+    transition: all 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
+  } */
+   .item span {
+    transition: all 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);}
