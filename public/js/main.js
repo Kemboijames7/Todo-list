@@ -86,18 +86,23 @@ async function editItem(event) {
     if (newTodoText) {
         try {
             const response = await fetch('/updateTodo', {
-                method: 'put',
+                method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     'id': itemId,
                     'newText': newTodoText
                 })
             });
-            const data = await response.json();
-            console.log(data);
-            location.reload();
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Server response:', data);
+                location.reload();  // Reload to reflect changes
+            } else {
+                const errorText = await response.text();
+                console.error('Failed to update todo:', errorText);
+            }
         } catch (err) {
-            console.log(err);
+            console.error('Error in update request:', err);
         }
     }
 }

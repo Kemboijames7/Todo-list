@@ -4,6 +4,8 @@ const MongoClient = require('mongodb').MongoClient;
 const PORT = 3000;
 require('dotenv').config();
 const { ObjectId } = require('mongodb');
+// const { ObjectId } = require('mongodb');
+
 
 let uri = process.env.DATABASE_URL
 
@@ -106,35 +108,53 @@ app.put('/likedItem', (request, response) => {
 //     });
 // });
 
+ 
 
-aapp.put('/updateTodo', (req, res) => {
+app.put('/updateTodo', (req, res) => {
     const itemId = req.body.id;
     const newTodoText = req.body.newText;
 
+    console.log('Received request to update todo with ID:', itemId);
+    console.log('New text:', newTodoText);
+
+    // Validate the ObjectId
     if (!ObjectId.isValid(itemId)) {
+        console.log('Invalid ID:', itemId);
         return res.status(400).json({ error: 'Invalid ID' });
     }
 
+    
+    // First check if the todo exists
     db.collection('todos')
-        .findOneAndUpdate(
-            { _id: ObjectId(itemId) },
-            { $set: { thing: newTodoText } },
-            { returnOriginal: false } // returns the updated document
-        )
+        .findOne({ _id: new ObjectId(itemId) })
+        .then(todo => {
+            if (!todo) {
+                console.log('Todo not found for ID:', itemId);
+                return res.status(404).json({ error: 'Todo not found' });
+            }
+            
+            // Proceed to update the todo if it exists
+            return db.collection('todos')
+                .findOneAndUpdate(
+                    { _id: new ObjectId(itemId) },
+                    { $set: { thing: newTodoText.trim() } },
+                    { returnOriginal: false }
+                );
+        })
         .then(result => {
-            if (!result.value) {
-                res.status(404).json({ error: 'Todo not found' });
-            } else {
-                res.json('Success');
+            if (result && result.value) {
+                console.log('Todo Updated Successfully:', result.value);
+                res.json({ message: 'Success', updatedTodo: result.value });
+            }  else {
+                console.log('Update failed for ID:', itemId);
             }
         })
+
         .catch(error => {
             console.error('Error updating todo:', error);
-            res.status(500).send('Error updating todo');
+            res.status(500).json({ error: 'Error updating todo' });
         });
 });
-
-
 // app.put('/markUnComplete', (request, response) => {
 //     db.collection('todos').updateOne({ thing: request.body.itemFromJS }, {
 //         $set: {
