@@ -109,7 +109,6 @@ app.put('/likedItem', (request, response) => {
 // });
 
  
-
 app.put('/updateTodo', (req, res) => {
     const itemId = req.body.id;
     const newTodoText = req.body.newText;
@@ -120,36 +119,38 @@ app.put('/updateTodo', (req, res) => {
     // Validate the ObjectId
     if (!ObjectId.isValid(itemId)) {
         console.log('Invalid ID:', itemId);
-        return res.status(400).json({ error: 'Invalid ID' });
+        return res.status(400).json({ error: 'Invalid ID format' });
     }
 
-    
+    // Convert itemId to ObjectId
+    const objectId = new ObjectId(itemId);
+
     // First check if the todo exists
     db.collection('todos')
-        .findOne({ _id: new ObjectId(itemId) })
+        .findOne({ _id: objectId })
         .then(todo => {
             if (!todo) {
                 console.log('Todo not found for ID:', itemId);
                 return res.status(404).json({ error: 'Todo not found' });
             }
-            
+
             // Proceed to update the todo if it exists
             return db.collection('todos')
                 .findOneAndUpdate(
-                    { _id: new ObjectId(itemId) },
+                    { _id: objectId },
                     { $set: { thing: newTodoText.trim() } },
-                    { returnOriginal: false }
+                    { returnDocument: 'after' }
                 );
         })
         .then(result => {
-            if (result && result.value) {
-                console.log('Todo Updated Successfully:', result.value);
-                res.json({ message: 'Success', updatedTodo: result.value });
-            }  else {
-                console.log('Update failed for ID:', itemId);
+            if (result) {
+                console.log('Todo Updated Successfully:', result);
+                res.json({ message: 'Success', updatedTodo: result });
+            } else {
+                console.log('Update failed for ID:', itemId, 'Full Result:', result);
+                res.status(500).json({ error: 'Update failed for unknown reasons' });
             }
         })
-
         .catch(error => {
             console.error('Error updating todo:', error);
             res.status(500).json({ error: 'Error updating todo' });
