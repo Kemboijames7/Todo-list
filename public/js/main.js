@@ -1,5 +1,6 @@
 const deleteBtn = document.querySelectorAll('.fa-trash');
-const item = document.querySelectorAll('.item .fa-check-square-o');
+const item = document.querySelectorAll('.item span');
+const itemCompleted = document.querySelectorAll('.item span.completed');
 const loveLiked = document.querySelectorAll('.fa-thumbs-up');
 const editButtons = document.querySelectorAll('.fa-edit');
 
@@ -9,9 +10,12 @@ Array.from(deleteBtn).forEach((element) => {
     element.addEventListener('click', deleteItem);
 });
 
-// Array.from(item).forEach((element) => {
-//     element.addEventListener('click', markComplete);
-// });
+Array.from(item).forEach((element) => {
+    element.addEventListener('click', markComplete);
+});
+Array.from(itemCompleted).forEach((element) => {
+    element.addEventListener('click', markUnComplete);
+});
 
 Array.from(loveLiked).forEach((element) => {
     element.addEventListener('click', addLike);
@@ -60,22 +64,39 @@ async function addLike(event) {
     }
 }
 
-// async function markComplete(event) {
-//     event.stopPropagation();
-//     const itemText = this.parentNode.querySelector('.todo-text').innerText;
-//     try {
-//         const response = await fetch('markComplete', {
-//             method: 'put',
-//             headers: { 'Content-Type': 'application/json' },
-//             body: JSON.stringify({ 'itemFromJS': itemText })
-//         });
-//         const data = await response.json();
-//         console.log(data);
-//         location.reload();
-//     } catch (err) {
-//         console.log(err);
-//     }
-// }
+
+async function markComplete(event) {
+    event.stopPropagation();
+    const itemText = this.parentNode.querySelector('.todo-text').innerText;
+    try {
+        const response = await fetch('markComplete', {
+            method: 'put',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 'itemFromJS': itemText })
+        });
+        const data = await response.json();
+        console.log(data);
+        location.reload();
+    } catch (err) {
+        console.log(err);
+    }
+}
+async function markUnComplete(event) {
+    event.stopPropagation();
+    const itemText = this.parentNode.querySelector('.todo-text').innerText;
+    try {
+        const response = await fetch('markComplete', {
+            method: 'put',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 'itemFromJS': itemText })
+        });
+        const data = await response.json();
+        console.log(data);
+        location.reload();
+    } catch (err) {
+        console.log(err);
+    }
+}
  
 
 
