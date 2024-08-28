@@ -68,6 +68,7 @@ async function addLike(event) {
 async function markComplete(event) {
     event.stopPropagation();
     const itemText = this.parentNode.querySelector('.todo-text').innerText;
+    console.log(itemText)
     try {
         const response = await fetch('markComplete', {
             method: 'put',

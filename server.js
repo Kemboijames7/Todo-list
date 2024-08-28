@@ -88,29 +88,6 @@ app.put('/likedItem', (request, response) => {
 
 
 
-// app.put('/markComplete', (request, response) => {
-//     db.collection('todos').updateOne(
-//         { thing: request.body.itemFromJS },
-//         {
-//             $set: {
-//                 completed: true  // Mark the item as completed
-//             }
-//         },
-//         {
-//             sort: { _id: -1 },
-//             upsert: false
-//         }
-//     )
-//     .then(result => {
-//         console.log('Marked Complete');
-//         response.json('Marked Complete');
-//     })
-//     .catch(error => {
-//         console.error(error);
-//         response.status(500).send('Error marking complete');
-//     });
-// });
-
  
 app.put('/updateTodo', (req, res) => {
     const itemId = req.body.id;
@@ -159,24 +136,56 @@ app.put('/updateTodo', (req, res) => {
             res.status(500).json({ error: 'Error updating todo' });
         });
 });
-// app.put('/markUnComplete', (request, response) => {
-//     db.collection('todos').updateOne({ thing: request.body.itemFromJS }, {
-//         $set: {
-//             completed: false
-//         }
-//     }, {
-//         sort: { _id: -1 },
-//         upsert: false
-//     })
-//         .then(result => {
-//             console.log('Marked Uncomplete');
-//             response.json('Marked Uncomplete');
-//         })
-//         .catch(error => {
-//             console.error(error);
-//             response.status(500).send('Error marking uncomplete');
-//         });
-// });
+
+
+
+
+
+app.put('/markComplete', (request, response) => {
+    db.collection('todos').updateOne(
+        { thing: request.body.itemFromJS },{
+            $set: {
+                completed: true  // Mark the item as completed
+            }
+        },
+        {
+            sort: { _id: -1 },
+            upsert: false
+        }
+    )
+    .then(result => {
+        console.log('Marked Complete');
+        response.json('Marked Complete');
+    })
+    .catch(error => {
+        console.error(error);
+        response.status(500).send('Error marking complete');
+    });
+});
+
+
+
+
+
+
+app.put('/markUnComplete', (request, response) => {
+    db.collection('todos').updateOne({ thing: request.body.itemFromJS }, {
+        $set: {
+            completed: false
+        }
+    }, {
+        sort: { _id: -1 },
+        upsert: false
+    })
+        .then(result => {
+            console.log('Marked Uncomplete');
+            response.json('Marked Uncomplete');
+        })
+        .catch(error => {
+            console.error(error);
+            response.status(500).send('Error marking uncomplete');
+        });
+});
 
 app.delete('/deleteItem', (request, response) => {
     db.collection('todos').deleteOne({ thing: request.body.itemFromJS })
