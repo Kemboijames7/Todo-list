@@ -11,10 +11,10 @@ Array.from(deleteBtn).forEach((element) => {
 });
 
 Array.from(item).forEach((element) => {
-    element.addEventListener('click', markComplete);
+    element.addEventListener('click', markUnComplete);
 });
 Array.from(itemCompleted).forEach((element) => {
-    element.addEventListener('click', markUnComplete);
+    element.addEventListener('click', markComplete);
 });
 
 Array.from(loveLiked).forEach((element) => {
@@ -46,7 +46,7 @@ async function deleteItem(event) {
     }
 }
 
-async function addLike(event) {
+async function addLike (event) {
     event.stopPropagation();
     const itemText = this.parentNode.querySelector('.todo-text').innerText;
     const tLikes = Number(this.innerText);
@@ -71,7 +71,7 @@ async function markComplete(event) {
     console.log(itemText)
     try {
         const response = await fetch('markComplete', {
-            method: 'put',
+            method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 'itemFromJS': itemText })
         });
@@ -85,9 +85,10 @@ async function markComplete(event) {
 async function markUnComplete(event) {
     event.stopPropagation();
     const itemText = this.parentNode.querySelector('.todo-text').innerText;
+    console.log(itemText)
     try {
-        const response = await fetch('markComplete', {
-            method: 'put',
+        const response = await fetch('markUnComplete', {
+            method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 'itemFromJS': itemText })
         });

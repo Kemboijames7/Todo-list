@@ -68,10 +68,11 @@ butn:hover {
 .item span {
     transition: all 0.3s ease;
     opacity: 1;
-    transform: translateY(0);}
+    transform: translateY(0);
+}
 
-.todo-text.completed {
-        text-decoration: none;  
+.completed {
+        text-decoration: line-through;  
         color: gray;  
     }
 

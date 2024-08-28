@@ -140,7 +140,6 @@ app.put('/updateTodo', (req, res) => {
 
 
 
-
 app.put('/markComplete', (request, response) => {
     db.collection('todos').updateOne(
         { thing: request.body.itemFromJS },{
@@ -163,13 +162,9 @@ app.put('/markComplete', (request, response) => {
     });
 });
 
-
-
-
-
-
 app.put('/markUnComplete', (request, response) => {
-    db.collection('todos').updateOne({ thing: request.body.itemFromJS }, {
+    db.collection('todos').updateOne(
+        { thing: request.body.itemFromJS }, {
         $set: {
             completed: false
         }
