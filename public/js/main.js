@@ -3,6 +3,7 @@ const item = document.querySelectorAll('.item span');
 const itemCompleted = document.querySelectorAll('.item span.completed');
 const loveLiked = document.querySelectorAll('.fa-thumbs-up');
 const editButtons = document.querySelectorAll('.fa-edit');
+const booLike = document.querySelectorAll('.fa-thumbs-down');
 
 
 
@@ -23,6 +24,9 @@ Array.from(loveLiked).forEach((element) => {
 
 Array.from(editButtons).forEach((element) => {
     element.addEventListener('click', editItem);
+});
+Array.from(booLike).forEach((element) => {
+    element.addEventListener('click', addDis);
 });
 
 async function deleteItem(event) {
@@ -52,7 +56,7 @@ async function addLike (event) {
     const tLikes = Number(this.innerText);
     try {
         const response = await fetch('likedItem', {
-            method: 'put',
+            method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 'itemFromJS': itemText, 'likesS': tLikes })
         });
@@ -64,6 +68,29 @@ async function addLike (event) {
     }
 }
 
+async function addDis (event) {
+    event.stopPropagation();
+    const itemText = this.parentNode.querySelector('.todo-text').innerText;
+    const dLikes = Number(this.innerText);
+    try {
+        const response = await fetch('disItem', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 'itemFromJS': itemText, 'likesz': dLikes })
+        });
+        const data = await response.json();
+        console.log(data);
+             // Only update the UI if the request was successful
+             if (response.ok) {
+                this.innerText = dLikes + 1;
+            } else {
+                console.error('Failed to update dislikes.');
+            }
+        } catch (err) {
+            console.error('Error:', err);
+        }
+    }
+      
 
 async function markComplete(event) {
     event.stopPropagation();

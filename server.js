@@ -85,7 +85,21 @@ app.put('/likedItem', (request, response) => {
 });
 
 
-
+app.put('/disItem', (request, response) => {
+    db.collection('todos').updateOne(
+        { thing: request.body.itemFromJS },
+        { $inc: { dis: 1 } },  // Increment 'dis' by 1
+        { upsert: false }
+    )
+    .then(result => {
+        console.log('Dis added:', result);
+        response.json('Dis added');
+    })
+    .catch(error => {
+        console.error('Error Disliking todo:', error);
+        response.status(500).send('Error Disliking todo');
+    });
+});
 
 
  
