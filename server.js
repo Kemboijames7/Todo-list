@@ -92,7 +92,7 @@ app.put('/disItem', (request, response) => {
         { upsert: false }
     )
     .then(result => {
-        console.log('Dis added:', result);
+        console.log('Dis added:');
         response.json('Dis added');
     })
     .catch(error => {

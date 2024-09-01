@@ -68,6 +68,7 @@ async function addLike (event) {
     }
 }
 
+
 async function addDis (event) {
     event.stopPropagation();
     const itemText = this.parentNode.querySelector('.todo-text').innerText;
@@ -92,6 +93,7 @@ async function addDis (event) {
     }
       
 
+
 async function markComplete(event) {
     event.stopPropagation();
     const itemText = this.parentNode.querySelector('.todo-text').innerText;
@@ -109,6 +111,8 @@ async function markComplete(event) {
         console.log(err);
     }
 }
+
+
 async function markUnComplete(event) {
     event.stopPropagation();
     const itemText = this.parentNode.querySelector('.todo-text').innerText;
