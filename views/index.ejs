@@ -20,16 +20,19 @@
                 <% } else{ %>
                     <span class="todo-text"><%= item.thing %></span>
                <% } %>
-       
-                <!-- Text of the todo item -->
-                <!-- <span class="todo-text"><%= item.thing %></span> -->
-                <!-- Like button -->
+             
                 <span class="fa fa-thumbs-up"><%= item.likes %></span>
                 <!-- Edit button (Pen icon) -->  
                 <span class="fa fa-edit" data-id="<%= item._id %>"></span>
                 <!-- Delete button -->
                 <span class="fa fa-trash"></span>
-                <span class="fa fa-thumbs-down"></span>
+                <span class="fa fa-thumbs-down"><%= item.dis %></span>
+
+                     <!-- Progress bar -->
+                     <span class="progress-bar">
+                        <span class="progress"><%= item.progress %></span>
+                    </span>
+                    <span><%= item.progress %></span>
  </li>
         <% }) %>
     </ol>

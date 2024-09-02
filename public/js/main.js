@@ -93,10 +93,9 @@ async function addDis (event) {
     }
       
 
-
 async function markComplete(event) {
     event.stopPropagation();
-    const itemText = this.parentNode.querySelector('.todo-text').innerText;
+    const itemText = this.parentNode.querySelector('.todo-text').innerText.trim();;
     console.log(itemText)
     try {
         const response = await fetch('markComplete', {
@@ -115,7 +114,7 @@ async function markComplete(event) {
 
 async function markUnComplete(event) {
     event.stopPropagation();
-    const itemText = this.parentNode.querySelector('.todo-text').innerText;
+    const itemText = this.parentNode.querySelector('.todo-text').innerText.trim();
     console.log(itemText)
     try {
         const response = await fetch('markUnComplete', {
