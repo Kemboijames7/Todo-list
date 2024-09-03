@@ -130,7 +130,15 @@ async function markUnComplete(event) {
     }
 }
  
-
+.then(result => {
+    console.log('Marked Complete and Progress Updated');
+    response.json('Marked Complete');
+})
+.catch(error => {
+    console.error(error);
+    response.status(500).send('Error marking complete');
+});
+});
 
 async function editItem(event) {
     const itemId = this.getAttribute('data-id');
