@@ -1,6 +1,6 @@
 const deleteBtn = document.querySelectorAll('.fa-trash');
 const item = document.querySelectorAll('.item span');
-const itemCompleted = document.querySelectorAll('.item span.completed');
+const itemCompleted = document.querySelectorAll('.item span .completed');
 const loveLiked = document.querySelectorAll('.fa-thumbs-up');
 const editButtons = document.querySelectorAll('.fa-edit');
 const booLike = document.querySelectorAll('.fa-thumbs-down');
@@ -96,7 +96,7 @@ async function addDis (event) {
 async function markComplete(event) {
     event.stopPropagation();
     const itemText = this.parentNode.querySelector('.todo-text').innerText.trim();;
-    console.log(itemText)
+    console.log('Marking complete:', itemText);
     try {
         const response = await fetch('markComplete', {
             method: 'PUT',
@@ -114,7 +114,7 @@ async function markComplete(event) {
 
 async function markUnComplete(event) {
     event.stopPropagation();
-    const itemText = this.parentNode.querySelector('.todo-text').innerText.trim();
+    const itemText = this.parentNode.querySelector('.todo-text').innerText;
     console.log(itemText)
     try {
         const response = await fetch('markUnComplete', {
@@ -130,15 +130,6 @@ async function markUnComplete(event) {
     }
 }
  
-.then(result => {
-    console.log('Marked Complete and Progress Updated');
-    response.json('Marked Complete');
-})
-.catch(error => {
-    console.error(error);
-    response.status(500).send('Error marking complete');
-});
-});
 
 async function editItem(event) {
     const itemId = this.getAttribute('data-id');

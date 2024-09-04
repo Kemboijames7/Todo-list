@@ -16,7 +16,7 @@
             <li class="item">
              
                 <%  if(item.thing === true) {%>
-                    <span class="completed  todo-text"><%= item.thing %></span>
+                    <span class="todo-text completed"><%= item.thing %></span>
                 <% } else{ %>
                     <span class="todo-text"><%= item.thing %></span>
                <% } %>
@@ -30,7 +30,7 @@
 
                      <!-- Progress bar -->
                      <span class="progress-bar">
-                        <span class="progress"><%= item.progress %></span>
+                        <span class="progress" style="width: 70%;"><%= item.progress %></span>
                     </span>
                     <span><%= item.progress %></span>
  </li>

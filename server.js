@@ -156,10 +156,10 @@ app.put('/updateTodo', (req, res) => {
 
 app.put('/markComplete', (request, response) => {
     db.collection('todos').updateOne(
-        { thing: request.body.itemFromJS },{
-            $set: {
-                completed: true  // Mark the item as completed
-            }
+        { thing: request.body.itemFromJS },
+        {
+            $set: { completed: true },
+            $inc: { progress: 100 } 
         },
         {
             sort: { _id: -1 },
@@ -167,7 +167,7 @@ app.put('/markComplete', (request, response) => {
         }
     )
     .then(result => {
-        console.log('Marked Complete');
+        console.log('Marked Complete and Progress Updated');
         response.json('Marked Complete');
     })
     .catch(error => {
