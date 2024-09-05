@@ -1,6 +1,5 @@
 const deleteBtn = document.querySelectorAll('.fa-trash');
-const item = document.querySelectorAll('.item span');
-const itemCompleted = document.querySelectorAll('.item span .completed');
+const todoItems = document.querySelectorAll('.todo-text');
 const loveLiked = document.querySelectorAll('.fa-thumbs-up');
 const editButtons = document.querySelectorAll('.fa-edit');
 const booLike = document.querySelectorAll('.fa-thumbs-down');
@@ -11,12 +10,12 @@ Array.from(deleteBtn).forEach((element) => {
     element.addEventListener('click', deleteItem);
 });
 
-Array.from(item).forEach((element) => {
-    element.addEventListener('click', markUnComplete);
+Array.from(todoItems).forEach((element) => {
+    element.addEventListener('click', toggleComplete);
 });
-Array.from(itemCompleted).forEach((element) => {
-    element.addEventListener('click', markComplete);
-});
+// Array.from(item).forEach((element) => {
+//     element.addEventListener('click', markComplete);
+// });
 
 Array.from(loveLiked).forEach((element) => {
     element.addEventListener('click', addLike);
@@ -93,38 +92,53 @@ async function addDis (event) {
     }
       
 
-async function markComplete(event) {
+// async function markComplete(event) {
+//     event.stopPropagation();
+//     const itemText = this.parentNode.querySelector('.todo-text').innerText.trim();;
+//     console.log(itemText);
+//     try {
+        
+//         const response = await fetch('markComplete', {
+//             method: 'PUT',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify({ 'itemFromJS': itemText })
+//         });
+//         const data = await response.json();
+//         console.log(data);
+//         location.reload();
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }
+
+
+async function toggleComplete(event) {
     event.stopPropagation();
-    const itemText = this.parentNode.querySelector('.todo-text').innerText.trim();;
-    console.log('Marking complete:', itemText);
-    try {
-        const response = await fetch('markComplete', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 'itemFromJS': itemText })
-        });
-        const data = await response.json();
-        console.log(data);
-        location.reload();
-    } catch (err) {
-        console.log(err);
+    const itemId = this.getAttribute('data-id');
+    console.log('Item ID:', itemId); // Debugging line
+
+    if (!itemId) {
+        console.error('No item ID found.');
+        return;
     }
-}
 
-
-async function markUnComplete(event) {
-    event.stopPropagation();
-    const itemText = this.parentNode.querySelector('.todo-text').innerText;
-    console.log(itemText)
+    const isCompleted = this.classList.contains('completed');
+    
     try {
-        const response = await fetch('markUnComplete', {
-            method: 'PUT',
+        const response = await fetch('/toggleComplete', {
+            method: 'put',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 'itemFromJS': itemText })
+            body: JSON.stringify({ 'itemId': itemId, 'completed': !isCompleted })
         });
         const data = await response.json();
         console.log(data);
-        location.reload();
+
+        // Update the UI
+        if (data.completed) {
+            this.classList.add('completed');
+        } else {
+            this.classList.remove('completed');
+        }
     } catch (err) {
         console.log(err);
     }

@@ -15,10 +15,10 @@
         <% items.forEach(item => { %>
             <li class="item">
              
-                <%  if(item.thing === true) {%>
-                    <span class="todo-text completed"><%= item.thing %></span>
+                <%  if(item.completed) {%>
+                    <span class="todo-text completed" data-id="<%= item._id %>"><%= item.thing %></span>
                 <% } else{ %>
-                    <span class="todo-text"><%= item.thing %></span>
+                    <span class="todo-text" data-id="<%= item._id %>"><%= item.thing %></span>
                <% } %>
              
                 <span class="fa fa-thumbs-up"><%= item.likes %></span>
@@ -30,7 +30,7 @@
 
                      <!-- Progress bar -->
                      <span class="progress-bar">
-                        <span class="progress" style="width: 70%;"><%= item.progress %></span>
+                        <span class="progress" style="width: 40%;"><%= item.progress %></span>
                     </span>
                     <span><%= item.progress %></span>
  </li>
