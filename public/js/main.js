@@ -61,7 +61,11 @@ async function addLike (event) {
         });
         const data = await response.json();
         console.log(data);
-        this.innerText = tLikes + 1;
+        if (response.ok) {
+            this.innerText = tLikes + 1;
+        } else {
+            console.error('Failed to update likes.');
+        }
     } catch (err) {
         console.log(err);
     }
@@ -76,7 +80,7 @@ async function addDis (event) {
         const response = await fetch('disItem', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 'itemFromJS': itemText, 'likesz': dLikes })
+            body: JSON.stringify({ 'itemFromJS': itemText })
         });
         const data = await response.json();
         console.log(data);
@@ -91,26 +95,6 @@ async function addDis (event) {
         }
     }
       
-
-// async function markComplete(event) {
-//     event.stopPropagation();
-//     const itemText = this.parentNode.querySelector('.todo-text').innerText.trim();;
-//     console.log(itemText);
-//     try {
-        
-//         const response = await fetch('markComplete', {
-//             method: 'PUT',
-//             headers: { 'Content-Type': 'application/json' },
-//             body: JSON.stringify({ 'itemFromJS': itemText })
-//         });
-//         const data = await response.json();
-//         console.log(data);
-//         location.reload();
-//     } catch (err) {
-//         console.log(err);
-//     }
-// }
-
 
 async function toggleComplete(event) {
     event.stopPropagation();
