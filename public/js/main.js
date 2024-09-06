@@ -1,8 +1,20 @@
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // Select all elements with the class 'progress-container'
+    const progressBtn = document.querySelectorAll('.progress-container');
+    console.log('Progress buttons found:', progressBtn.length);
+    // Attach event listener to each progress bar container
+    progressBtn.forEach((element, index) => {
+        console.log(`Attaching event listener to progress button #${index}`);
+        element.addEventListener('click', progressItem);
+    });
 const deleteBtn = document.querySelectorAll('.fa-trash');
 const todoItems = document.querySelectorAll('.todo-text');
 const loveLiked = document.querySelectorAll('.fa-thumbs-up');
 const editButtons = document.querySelectorAll('.fa-edit');
 const booLike = document.querySelectorAll('.fa-thumbs-down');
+
+
 
 
 
@@ -13,9 +25,8 @@ Array.from(deleteBtn).forEach((element) => {
 Array.from(todoItems).forEach((element) => {
     element.addEventListener('click', toggleComplete);
 });
-// Array.from(item).forEach((element) => {
-//     element.addEventListener('click', markComplete);
-// });
+
+
 
 Array.from(loveLiked).forEach((element) => {
     element.addEventListener('click', addLike);
@@ -27,6 +38,9 @@ Array.from(editButtons).forEach((element) => {
 Array.from(booLike).forEach((element) => {
     element.addEventListener('click', addDis);
 });
+});
+
+
 
 async function deleteItem(event) {
     event.stopPropagation();
@@ -154,5 +168,47 @@ async function editItem(event) {
         } catch (err) {
             console.error('Error in update request:', err);
         }
+    }
+}
+
+
+
+async function progressItem(event) {
+    event.stopPropagation();
+
+    console.log('Progress bar clicked');
+ // Get the progress from data attribute
+ let currentProgress = parseInt(this.getAttribute('data-progress'), 10) || 0;
+    // Correct ternary operator usage
+    currentProgress = currentProgress < 100 ? currentProgress + 20 : 0;
+
+    // Update progress bar
+    const progressBar = this.querySelector('.progress');
+    const progressText = this.nextElementSibling;
+
+    progressBar.style.width = currentProgress + '%';
+    progressBar.textContent = currentProgress + '%';
+    progressText.textContent = currentProgress;
+
+    // Get the item ID from data-id attribute
+    const itemId = this.getAttribute('data-id');
+
+    try {
+        const response = await fetch(`/update-progress/${itemId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ progress: currentProgress })
+        });
+
+        // Parse the response
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log('Progress updated successfully:', data);
+        } else {
+            console.error('Error updating progress:', data.message);
+        }
+    } catch (error) {
+        console.error('Error updating progress:', error);
     }
 }

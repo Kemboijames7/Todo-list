@@ -77,23 +77,30 @@ butn:hover {
     }
 
     .progress-bar {
-        background-color: #f3f3f3;
-        border-radius: 5px;
-        overflow: hidden;
-        height: 10px;
-        margin-top: 5px;
-        width: 100px;
+        display: inline-block;
+        width: 6%;
+        border-radius: 6px;
+        background-color: #090505; 
+        margin-left: 10px;   
+        vertical-align: middle; 
     }
     
+    /* Progress fill */
     .progress {
-        background-color: #4caf50;
-        height: 100%;
-    }    
+        display: block; 
+        line-height: 30px;
+
+        border-radius: 4px;
+        background-color: #0fe830;
+        transition: width 0.3s ease;
+    }
+    
+    butn:hover {
+        background-color:#E493B3;
+    }
 
 /* 
-butn:hover {
-    background-color:#E493B3;
-}
+
 
 .fa-check-square-o.completed {
     color: green;  

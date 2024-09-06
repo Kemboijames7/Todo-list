@@ -73,7 +73,7 @@ app.post('/addTodo', (request, response) => {
 app.put('/likedItem', (request, response) => {
     db.collection('todos').updateOne(
         { thing: request.body.itemFromJS },
-        { $set: { likes: request.body.likesS + 1 } },
+        { $inc: { likes: 1 } },
         { upsert: false }
     )
     .then(result => {
@@ -155,29 +155,6 @@ app.put('/updateTodo', (req, res) => {
 
 
 
-
-// app.put('/markComplete', (request, response) => {
-//     db.collection('todos').updateOne(
-//         { thing: request.body.itemFromJS },
-//         {
-//             $set: { completed: true },
-//             $inc: { progress: 10 } 
-//         },
-//         {
-//             sort: { _id: -1 },
-//             upsert: false
-//         }
-//     )
-//     .then(result => {
-//         console.log('Marked Complete and Progress Updated');
-//         response.json('Marked Complete');
-//     })
-//     .catch(error => {
-//         console.error(error);
-//         response.status(500).send('Error marking complete');
-//     });
-// });
-
 app.put('/toggleComplete', (request, response) => {
     const itemId = request.body.itemId;
     const completedStatus = request.body.completed;
@@ -209,4 +186,18 @@ app.delete('/deleteItem', (request, response) => {
             console.error(error);
             response.status(500).send('Error deleting todo');
         });
+});
+
+app.put('/update-progress/:id', (req, res) => {
+    const itemId = parseInt(req.params.id, 10);
+    const newProgress = req.body.progress;
+
+    // Find the item in the database and update its progress
+    const item = items.find(i => i.id === itemId);
+    if (item) {
+        item.progress = newProgress;
+        res.status(200).json({ success: true, item });
+    } else {
+        res.status(404).json({ success: false, message: 'Item not found' });
+    }
 });

@@ -29,10 +29,13 @@
                 <span class="fa fa-thumbs-down"><%= item.dis %></span>
 
                      <!-- Progress bar -->
-                     <span class="progress-bar">
-                        <span class="progress" style="width: 40%;"><%= item.progress %></span>
+                     <span class="progress-bar progress-container" data-id="<%= item._id %>"  data-progress="<%= item.progress || 0 %>">
+                        <span class="progress"><%= item.progress %></span>
                     </span>
                     <span><%= item.progress %></span>
+
+                    <span id="progress-percentage"><%= item.progress %></span>  
+                    
  </li>
         <% }) %>
     </ol>
