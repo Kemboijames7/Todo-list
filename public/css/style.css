@@ -79,6 +79,7 @@ butn:hover {
     .progress-bar {
         display: inline-block;
         width: 6%;
+       
         border-radius: 6px;
         background-color: #090505; 
         margin-left: 10px;   
@@ -88,8 +89,7 @@ butn:hover {
     /* Progress fill */
     .progress {
         display: block; 
-        line-height: 30px;
-
+      
         border-radius: 4px;
         background-color: #0fe830;
         transition: width 0.3s ease;

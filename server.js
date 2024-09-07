@@ -188,16 +188,51 @@ app.delete('/deleteItem', (request, response) => {
         });
 });
 
-app.put('/update-progress/:id', (req, res) => {
-    const itemId = parseInt(req.params.id, 10);
-    const newProgress = req.body.progress;
+app.put('/update-progress/:id', async (req, res) => {
+    try {
+        // Extract itemId and newProgress from request
+        const itemId = req.params.id;
+        const newProgress = req.body.progress;
 
-    // Find the item in the database and update its progress
-    const item = items.find(i => i.id === itemId);
-    if (item) {
-        item.progress = newProgress;
-        res.status(200).json({ success: true, item });
-    } else {
-        res.status(404).json({ success: false, message: 'Item not found' });
+        console.log('Full Request URL:', req.originalUrl);
+        console.log('Received itemId (from params):', itemId);
+        console.log('Received newProgress (from body):', newProgress);
+
+        // Validate the ObjectId
+        if (!ObjectId.isValid(itemId)) {
+            console.log('Invalid ID:', itemId);
+            return res.status(400).json({ error: 'Invalid ID format' });
+        }
+
+        // Convert itemId to ObjectId
+        const objectId = new ObjectId(itemId);
+
+          // Debug: Check if the item exists in the database
+          const item = await db.collection('todos').findOne({ _id: objectId });
+          console.log('Item found before update:', item);
+  
+          if (!item) {
+              console.log('Item not found for ID:', itemId);
+              return res.status(404).json({ success: false, message: 'Item not found' });
+          }
+
+        // Update the item in the database
+        const result = await db.collection('todos').findOneAndUpdate(
+            { _id: objectId },
+            { $set: { progress: newProgress } },
+            { returnDocument: 'after' }
+        );
+ 
+        // Check if the item was found and updated
+        if (result.value) {
+            console.log('Item updated successfully:', result.value);
+            res.status(200).json({ success: true, item: result.value });
+        } else {
+            console.log('Item not found for ID:', itemId);
+            res.status(404).json({ success: false, message: 'Item not found' });
+        }
+    } catch (error) {
+        console.error("Error in the route:", error);
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 });
