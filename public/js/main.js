@@ -183,12 +183,16 @@ async function progressItem(event) {
      
     // Update progress bar
     const progressBar = this.querySelector('.progress');
-    const progressText = this.nextElementSibling;
+    
 
     progressBar.style.width = currentProgress + '%';
     progressBar.textContent = currentProgress + '%';
     
-    progressText.textContent = currentProgress;
+    // Update the progress text
+    const progressText = this.nextElementSibling;
+    if (progressText) {
+        progressText.textContent = currentProgress;
+    }
 
     // Get the item ID from data-id attribute
     const itemId = this.getAttribute('data-id');
@@ -196,22 +200,19 @@ async function progressItem(event) {
 
 
     try {
-        console.log("Item ID being sent:", itemId);
         const response = await fetch(`/update-progress/${itemId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ progress: currentProgress })
         });
     
-        if (!response.ok) {
-            console.error('Error updating progress, HTTP Status:', response.status);
-            return;
-        }
-    
-        const data = await response.json();
-        console.log('Progress updated successfully:', data);
-        
-    } catch (error) {
-        console.error('Network or parsing error:', error);
+        const result = await response.json();
+    if (response.ok) {
+        console.log('Progress updated successfully:', result);
+    } else {
+        console.error('Error updating progress:', result.message);
     }
+} catch (error) {
+    console.error('Error updating progress:', error);
+}
 }

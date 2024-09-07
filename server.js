@@ -188,51 +188,35 @@ app.delete('/deleteItem', (request, response) => {
         });
 });
 
+
 app.put('/update-progress/:id', async (req, res) => {
     try {
-        // Extract itemId and newProgress from request
         const itemId = req.params.id;
         const newProgress = req.body.progress;
 
-        console.log('Full Request URL:', req.originalUrl);
-        console.log('Received itemId (from params):', itemId);
-        console.log('Received newProgress (from body):', newProgress);
-
-        // Validate the ObjectId
         if (!ObjectId.isValid(itemId)) {
-            console.log('Invalid ID:', itemId);
             return res.status(400).json({ error: 'Invalid ID format' });
         }
 
-        // Convert itemId to ObjectId
         const objectId = new ObjectId(itemId);
+        const item = await db.collection('todos').findOne({ _id: objectId });
 
-          // Debug: Check if the item exists in the database
-          const item = await db.collection('todos').findOne({ _id: objectId });
-          console.log('Item found before update:', item);
-  
-          if (!item) {
-              console.log('Item not found for ID:', itemId);
-              return res.status(404).json({ success: false, message: 'Item not found' });
-          }
+        if (!item) {
+            return res.status(404).json({ success: false, message: 'Item not found' });
+        }
 
-        // Update the item in the database
-        const result = await db.collection('todos').findOneAndUpdate(
+        const updateResult = await db.collection('todos').updateOne(
             { _id: objectId },
-            { $set: { progress: newProgress } },
-            { returnDocument: 'after' }
+            { $set: { progress: newProgress } }
         );
- 
-        // Check if the item was found and updated
-        if (result.value) {
-            console.log('Item updated successfully:', result.value);
-            res.status(200).json({ success: true, item: result.value });
+
+        if (updateResult.modifiedCount === 1) {
+            const updatedItem = await db.collection('todos').findOne({ _id: objectId });
+            res.status(200).json({ success: true, item: updatedItem });
         } else {
-            console.log('Item not found for ID:', itemId);
-            res.status(404).json({ success: false, message: 'Item not found' });
+            res.status(500).json({ error: 'Update failed' });
         }
     } catch (error) {
-        console.error("Error in the route:", error);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });

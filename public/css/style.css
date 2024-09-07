@@ -78,21 +78,27 @@ butn:hover {
 
     .progress-bar {
         display: inline-block;
-        width: 6%;
-       
+        width: 100px; /* Fixed width for the progress container */
+        height: 20px; /* Fixed height for the progress bar */
         border-radius: 6px;
-        background-color: #090505; 
-        margin-left: 10px;   
-        vertical-align: middle; 
+        background-color: #090505;
+        position: relative;
+        overflow: hidden; /* Ensure overflow is hidden */
+        margin-left: 10px; /* Space between progress bar and other elements */
     }
     
-    /* Progress fill */
+
     .progress {
-        display: block; 
-      
+        display: block;
+        height: 100%;
+        width: 0%; /* Start at 0%, will change dynamically */
         border-radius: 4px;
         background-color: #0fe830;
-        transition: width 0.3s ease;
+        text-align: center; /* Center text horizontally */
+        color: white;
+        line-height: 8px; /* Center text vertically */
+        font-weight: bold;
+        box-sizing: border-box; /* Ensure width is contained within the container */
     }
     
     butn:hover {
