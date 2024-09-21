@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         element.addEventListener('click', progressItem);
     });
+
+    const todos = new Set();  // Use a Set to store unique todos
+
 const deleteBtn = document.querySelectorAll('.fa-trash');
 const todoItems = document.querySelectorAll('.todo-text');
 const loveLiked = document.querySelectorAll('.fa-thumbs-up');
@@ -215,4 +218,29 @@ async function progressItem(event) {
 } catch (error) {
     console.error('Error updating progress:', error);
 }
-}
+} 
+
+const form = document.querySelector('form');
+const todoInput = document.getElementById('todoInput');
+const errorMessage = document.createElement('p');
+errorMessage.classList.add('error');
+form.insertBefore(errorMessage, form.firstChild);
+
+form.addEventListener('submit', (e) => {
+  const todo = todoInput.value.trim();
+  const todoListItems = document.querySelectorAll('ul li');
+  let duplicateFound = false;
+
+  todoListItems.forEach((item) => {
+    if (item.textContent === todo) {
+      duplicateFound = true;
+    }
+  });
+
+  if (duplicateFound) {
+    e.preventDefault(); // Prevent form submission
+    errorMessage.textContent = 'Todo already exists!';
+  } else {
+    errorMessage.textContent = ''; // Clear error message if no duplicate found
+  }
+});
