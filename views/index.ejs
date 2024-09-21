@@ -11,6 +11,8 @@
 <body>
     <h1>Todo List: </h1>
 
+
+
     <ol class="todoItems">
         <% items.forEach(item => { %>
             <li class="item">
@@ -45,10 +47,11 @@
 
     <h2>Add A Todo:</h2>
 
-    <form action="/addTodo" method="POST">
-        <input type="text" placeholder="Things To Do" name="todoItem">
+    <form  id="submitForm" action="/addTodo" method="POST">
+        <input type="text"  class="todoInput" placeholder="Things To Do" name="todoItem">
         <input class="butn" type="submit">
     </form>
+    <div id="notification"></div>
 
   
     

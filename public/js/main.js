@@ -15,9 +15,42 @@ const deleteBtn = document.querySelectorAll('.fa-trash');
 const todoItems = document.querySelectorAll('.todo-text');
 const loveLiked = document.querySelectorAll('.fa-thumbs-up');
 const editButtons = document.querySelectorAll('.fa-edit');
-const booLike = document.querySelectorAll('.fa-thumbs-down');
 
+const todosSet = new Set(JSON.parse(document.getElementById('existingTodos').value)); // Initialize Set with existing todos
 
+const form = document.getElementById('submitForm');
+const todoInput = document.getElementById('todoInput');
+const notification = document.getElementById('notification');
+
+form.addEventListener('submit', function(event) {
+    event.preventDefault();  // Prevent the form from submitting immediately
+
+    const todoText = todoInput.value.trim();  // Get the value of the input
+
+    if (todoText) {
+        if (todosSet.has(todoText)) {
+            notification.textContent = `You have already added the todo: "${todoText}".`;
+            notification.classList.add('error');
+            notification.classList.remove('success');
+        } else {
+            todosSet.add(todoText);  // Add the new todo to the Set
+            notification.textContent = `Thank you for adding "${todoText}".`;
+            notification.classList.add('success');
+            notification.classList.remove('error');
+
+            // Submit the form to the server after successful addition
+            form.submit();  
+        }
+    }
+
+    // Clear the input field after submission
+    form.reset();
+
+    // Remove the notification after 4 seconds
+    setTimeout(() => {
+        notification.textContent = '';
+    }, 4000);
+});
 
 
 
@@ -220,27 +253,3 @@ async function progressItem(event) {
 }
 } 
 
-const form = document.querySelector('form');
-const todoInput = document.getElementById('todoInput');
-const errorMessage = document.createElement('p');
-errorMessage.classList.add('error');
-form.insertBefore(errorMessage, form.firstChild);
-
-form.addEventListener('submit', (e) => {
-  const todo = todoInput.value.trim();
-  const todoListItems = document.querySelectorAll('ul li');
-  let duplicateFound = false;
-
-  todoListItems.forEach((item) => {
-    if (item.textContent === todo) {
-      duplicateFound = true;
-    }
-  });
-
-  if (duplicateFound) {
-    e.preventDefault(); // Prevent form submission
-    errorMessage.textContent = 'Todo already exists!';
-  } else {
-    errorMessage.textContent = ''; // Clear error message if no duplicate found
-  }
-});
