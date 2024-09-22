@@ -105,6 +105,17 @@ butn:hover {
         background-color:#E493B3;
     }
 
+
+    .error {
+        color: red;
+        font-weight: bold;
+    }
+
+    .success {
+        color: green;
+        font-weight: bold;
+    }
+
 /* 
 
 

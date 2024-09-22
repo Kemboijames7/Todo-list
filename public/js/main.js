@@ -9,37 +9,55 @@ document.addEventListener('DOMContentLoaded', () => {
         element.addEventListener('click', progressItem);
     });
 
-    const todos = new Set();  // Use a Set to store unique todos
-
+    
+const booLike = document.querySelectorAll('.fa-thumbs-down');
 const deleteBtn = document.querySelectorAll('.fa-trash');
 const todoItems = document.querySelectorAll('.todo-text');
 const loveLiked = document.querySelectorAll('.fa-thumbs-up');
 const editButtons = document.querySelectorAll('.fa-edit');
 
-const todosSet = new Set(JSON.parse(document.getElementById('existingTodos').value)); // Initialize Set with existing todos
+const existingTodos = document.getElementById('existingTodos');
+if (existingTodos) {
+  console.log(existingTodos.value);  // Logs only once
+} else {
+  console.error('existingTodos element not found');
+}
 
+// Parse the existing todos from the hidden input field
+const originalTodos = JSON.parse(document.getElementById('existingTodos').value);
+
+// Create a Set to track the existing todos
+const todosSet = new Set(originalTodos);
+
+// Get the form, input, and notification elements
 const form = document.getElementById('submitForm');
 const todoInput = document.getElementById('todoInput');
 const notification = document.getElementById('notification');
 
+// Add an event listener for form submission
 form.addEventListener('submit', function(event) {
     event.preventDefault();  // Prevent the form from submitting immediately
 
     const todoText = todoInput.value.trim();  // Get the value of the input
 
     if (todoText) {
+        // Check if the todo already exists in the Set
         if (todosSet.has(todoText)) {
+            // Display an error notification if the todo is a duplicate
             notification.textContent = `You have already added the todo: "${todoText}".`;
             notification.classList.add('error');
             notification.classList.remove('success');
         } else {
-            todosSet.add(todoText);  // Add the new todo to the Set
+            // Add the new todo to the Set
+            todosSet.add(todoText);
+            
+            // Display a success notification
             notification.textContent = `Thank you for adding "${todoText}".`;
             notification.classList.add('success');
             notification.classList.remove('error');
 
-            // Submit the form to the server after successful addition
-            form.submit();  
+            // Optionally, submit the form to the server after a successful addition
+            form.submit();
         }
     }
 
@@ -61,8 +79,6 @@ Array.from(deleteBtn).forEach((element) => {
 Array.from(todoItems).forEach((element) => {
     element.addEventListener('click', toggleComplete);
 });
-
-
 
 Array.from(loveLiked).forEach((element) => {
     element.addEventListener('click', addLike);

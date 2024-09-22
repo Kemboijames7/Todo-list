@@ -47,8 +47,17 @@
 
     <h2>Add A Todo:</h2>
 
+
+    <!-- Hidden input to store existing todos -->
+    <% if (items && items.length > 0) { %>
+        <input type="hidden" id="existingTodos" value='<%- JSON.stringify(items.map(item => item.thing)) %>' />
+      <% } else { %>
+        <p>No todos found</p>
+      <% } %>
+      
+
     <form  id="submitForm" action="/addTodo" method="POST">
-        <input type="text"  class="todoInput" placeholder="Things To Do" name="todoItem">
+        <input type="text"  id="todoInput" placeholder="Things To Do" name="todoItem" required>
         <input class="butn" type="submit">
     </form>
     <div id="notification"></div>
